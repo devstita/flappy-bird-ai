@@ -12,7 +12,7 @@ boolean isGameOver;
 void setup() {
 	size(800, 800); // 800 x 800 Window Size
 	frameRate(FRAME_RATE); // Default
-	smooth(); // Todo: Make Dispaly Smooth
+	smooth();
 	noStroke();
 
 	bird = new Bird(MAX_WIDTH, MAX_HEIGHT);
@@ -104,7 +104,8 @@ class Bird {
 	}
 }
 
-// Todo: Develop Collision Check Algorithm
+// TODO: Develop Collision Check Algorithm
+// FIXME: Flashing pipe error
 class PipeManager {
 	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
 	private static final float PIPE_MIN_HEIGHT = 100;
@@ -175,6 +176,8 @@ class PipeManager {
 }
 
 class Pipe {
+	private static final PIPE_MOVING_SPEED = 1;
+
 	float topY, topHeight;
 	float bottomY, bottomHeight;
 	float x, width;
@@ -186,7 +189,7 @@ class Pipe {
 	public void loop() {
 		rect(x, topY, width, topHeight);
 		rect(x, bottomY, width, bottomHeight);
-		x -= 1;
+		x -= PIPE_MOVING_SPEED;
 	}
 
 	public void setPipe(float topY, float topHeight, float bottomY, float bottomHeight, 
