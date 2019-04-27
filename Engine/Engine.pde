@@ -11,7 +11,7 @@ void setup() {
 	smooth(); // Todo: Make Dispaly Smooth
 
 	bird = new Bird(800, 800);
-	pipes = new PipeManager(800, 800);
+	pipes = new PipeManager(800, 800, bird);
 }
 
 void draw() {
@@ -68,6 +68,10 @@ class Bird {
 		isJumping = true;
 		speed = JUMPING_FORCE;
 	}
+
+	public float getX() {
+		return this.x;
+	}
 }
 
 class PipeManager {
@@ -76,17 +80,23 @@ class PipeManager {
 	private static final float PIPE_WIDTH = 75;
 	private static final float PASS_AREA_HEIGHT = 150;
 
+	Bird bird;
+
 	float maxWidth, maxHeight;
 	float lastObstalceCreateMs;
 
-	ArrayList<Pipe> pipes;
+	ArrayList<Pipe> frontPipes;
+	ArrayList<Pipe> backPipes;
 
-	public PipeManager(float maxWidth, float maxHeight) {
+	public PipeManager(float maxWidth, float maxHeight, Bird bird) {
 		this.maxWidth = maxWidth;
 		this.maxHeight = maxHeight;
 
+		this.bird = bird;
+
 		lastObstalceCreateMs = 0F;
-		pipes = new ArrayList<Pipe>();
+		frontPipes = new ArrayList<Pipe>();
+		backPipes = new ArrayList<Pipe>();
 	}
 
 	public boolean loop() {
@@ -99,12 +109,24 @@ class PipeManager {
 			created = true;
 		}
 
-		for (int i = 0; i < pipes.size(); i++) {
-			Pipe pipe = pipes.get(i);
-			if (pipe.getX() + pipe.getWidth() < 0) {
-				pipes.remove(i--);
+		if (!backPipes.isEmpty()) {
+			Pipe pipe = backPipes.get(0);
+			pipe.loop();
+			
+			if (pipe.getXIncludedWidth() < 0) {
+				backPipes.remove(0);
 				System.out.println("Pipe Removed!!");
-			} else pipe.loop();
+			}
+		}
+
+		for (int i = 0; i < frontPipes.size(); i++) {
+			Pipe pipe = frontPipes.get(i);
+			pipe.loop();
+
+			if (pipe.getXIncludedWidth() < bird.getX()) {
+				backPipes.add(pipe);
+				frontPipes.remove(i--);
+			}
 		}
 
 		return created;
@@ -116,7 +138,7 @@ class PipeManager {
 		float bottomHeight = maxHeight - (topHeight + PASS_AREA_HEIGHT);
 
 		Pipe pipe = new Pipe(0, topHeight, maxWidth - bottomHeight, bottomHeight, maxWidth - 100, PIPE_WIDTH);
-		pipes.add(pipe);
+		frontPipes.add(pipe);
 	}
 }
 
@@ -153,5 +175,9 @@ class Pipe {
 
 	public float getWidth() {
 		return this.width;
+	}
+
+	public float getXIncludedWidth() {
+		return (getX() + getWidth());
 	}
 }
