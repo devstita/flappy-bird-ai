@@ -2,23 +2,16 @@ import processing.net.*;
 
 static final float FRAME_RATE = 60;
 
-static final float GRAVITY = 0.2;
-static final float JUMPING_FORCE = 7.5;
-
-static final float PIPE_CREATE_TIME_MILLIS = 3000;
-static final float PIPE_MIN_HEIGHT = 100;
-static final float PIPE_WIDTH = 25;
-static final float PASS_AREA_HEIGHT = 100;
-
 Bird bird;
 PipeManager pipes;
 
 void setup() {
 	size(800, 800); // 800 x 800 Window Size
 	frameRate(FRAME_RATE); // Default
+	smooth(); // Todo: Make Dispaly Smooth
 
-	bird = new Bird(800, 800, GRAVITY, JUMPING_FORCE);
-	pipes = new PipeManager(800, 800, PIPE_MIN_HEIGHT, PIPE_WIDTH, PASS_AREA_HEIGHT, PIPE_CREATE_TIME_MILLIS);
+	bird = new Bird(800, 800);
+	pipes = new PipeManager(800, 800);
 }
 
 void draw() {
@@ -28,36 +21,37 @@ void draw() {
 	bird.loop();
 }
 
-void keyReleased() {
+void keyPressed() {
 	if (key == ENTER) bird.jump();
 }
 
+// Todo: Develop Collision Check Algorithm
 class Bird {
+	private static final float GRAVITY = 0.5F;
+	private static final float JUMPING_FORCE = 7.0F;
+	private static final float BIRD_SIZE = 40F;
+
 	float maxWidth, maxHeight;
-	float gravity, jumpingForce;
 
 	float x, y, speed;
 	boolean isJumping;
 
-	public Bird(float maxWidth, float maxHeight, float gravity, float jumpingForce) {
+	public Bird(float maxWidth, float maxHeight) {
 		this.maxWidth = maxWidth;
 		this.maxHeight = maxHeight;
 
-		this.gravity = gravity;
-		this.jumpingForce = jumpingForce;
-
 		x = maxWidth / 4;
 		y = maxHeight / 2;
-		speed = gravity;
+		speed = GRAVITY;
 		isJumping = false;
 	}
 
 	public void loop() {
-		ellipse(x, y, 50, 50);
+		ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
 
 		if (!isJumping) {
 			y += speed;
-			speed += gravity;
+			speed += GRAVITY;
 		} else {
 			if (speed <= 0) {
 				isJumping = false;
@@ -65,31 +59,31 @@ class Bird {
 			}
 
 			y -= speed;
-			speed -= gravity;
+			speed -= GRAVITY;
 		}
 	}
 
 	public void jump() {
+		System.out.println("Jump Bird!!");
 		isJumping = true;
-		speed = jumpingForce;
+		speed = JUMPING_FORCE;
 	}
 }
 
 class PipeManager {
+	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
+	private static final float PIPE_MIN_HEIGHT = 100;
+	private static final float PIPE_WIDTH = 75;
+	private static final float PASS_AREA_HEIGHT = 150;
+
 	float maxWidth, maxHeight;
-	float minPipeHeight, pipeWidth, passAreaHeight, pipeCreateTimeMillis;
 	float lastObstalceCreateMs;
 
 	ArrayList<Pipe> pipes;
 
-	public PipeManager(float maxWidth, float maxHeight, float minPipeHeight, float pipeWidth, float passAreaHeight, float pipeCreateTimeMillis) {
+	public PipeManager(float maxWidth, float maxHeight) {
 		this.maxWidth = maxWidth;
 		this.maxHeight = maxHeight;
-
-		this.minPipeHeight = minPipeHeight;
-		this.pipeWidth = pipeWidth;
-		this.passAreaHeight = passAreaHeight;
-		this.pipeCreateTimeMillis = pipeCreateTimeMillis;
 
 		lastObstalceCreateMs = 0F;
 		pipes = new ArrayList<Pipe>();
@@ -99,7 +93,7 @@ class PipeManager {
 		float curMillis = millis();
 		boolean created =  false;
 
-		if (curMillis > lastObstalceCreateMs + pipeCreateTimeMillis) {
+		if (curMillis > lastObstalceCreateMs + PIPE_CREATE_TIME_MILLIS) {
 			createPipe();
 			lastObstalceCreateMs = curMillis;
 			created = true;
@@ -107,8 +101,10 @@ class PipeManager {
 
 		for (int i = 0; i < pipes.size(); i++) {
 			Pipe pipe = pipes.get(i);
-			if (pipe.getX() < 0) pipes.remove(i--);
-			else pipe.loop();
+			if (pipe.getX() + pipe.getWidth() < 0) {
+				pipes.remove(i--);
+				System.out.println("Pipe Removed!!");
+			} else pipe.loop();
 		}
 
 		return created;
@@ -116,10 +112,10 @@ class PipeManager {
 
 	private void createPipe() {
 		System.out.println("Create Pipe!!");
-		float topHeight = random(minPipeHeight, maxHeight - (minPipeHeight + passAreaHeight));
-		float bottomHeight = maxHeight - (topHeight + passAreaHeight);
+		float topHeight = random(PIPE_MIN_HEIGHT, maxHeight - (PIPE_MIN_HEIGHT + PASS_AREA_HEIGHT));
+		float bottomHeight = maxHeight - (topHeight + PASS_AREA_HEIGHT);
 
-		Pipe pipe = new Pipe(0, topHeight, maxWidth - bottomHeight, bottomHeight, maxWidth - 100, pipeWidth);
+		Pipe pipe = new Pipe(0, topHeight, maxWidth - bottomHeight, bottomHeight, maxWidth - 100, PIPE_WIDTH);
 		pipes.add(pipe);
 	}
 }
@@ -153,5 +149,9 @@ class Pipe {
 
 	public float getX() {
 		return this.x;
+	}
+
+	public float getWidth() {
+		return this.width;
 	}
 }
