@@ -13,6 +13,7 @@ void setup() {
 	size(800, 800); // 800 x 800 Window Size
 	frameRate(FRAME_RATE); // Default
 	smooth(); // Todo: Make Dispaly Smooth
+	noStroke();
 
 	bird = new Bird(MAX_WIDTH, MAX_HEIGHT);
 	pipeManager = new PipeManager(MAX_WIDTH, MAX_HEIGHT, bird);
@@ -45,7 +46,6 @@ void gameOver() {
 	text("GAME OVER", MAX_WIDTH / 2, MAX_HEIGHT / 2);
 }
 
-// Todo: Develop Collision Check Algorithm
 class Bird {
 	private static final float GRAVITY = 0.5F;
 	private static final float JUMPING_FORCE = 7.0F;
@@ -104,6 +104,7 @@ class Bird {
 	}
 }
 
+// Todo: Develop Collision Check Algorithm
 class PipeManager {
 	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
 	private static final float PIPE_MIN_HEIGHT = 100;
@@ -127,6 +128,7 @@ class PipeManager {
 		isDisabled = false;
 
 		pipes = new ArrayList<Pipe>();
+		createPipe();
 	}
 
 	public boolean loop() {
@@ -147,7 +149,6 @@ class PipeManager {
 					pipes.remove(0);
 					System.out.println("Pipe Removed!!");
 				} else {
-					
 					pipe.loop();
 				}
 			}
