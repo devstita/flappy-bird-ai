@@ -71,7 +71,7 @@ class Bird {
 	public void loop() {
 		ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
 
-		if (getYWithoutSize() <= 0 || getYWithoutSize() >= 800) gameOver();
+		if (getYWithoutSize() >= 800) gameOver();
 
 		if (!isDisabled) {
 			if (!isJumping) {
@@ -176,7 +176,7 @@ class PipeManager {
 }
 
 class Pipe {
-	private static final PIPE_MOVING_SPEED = 1;
+	private static final int PIPE_MOVING_SPEED = 1;
 
 	float topY, topHeight;
 	float bottomY, bottomHeight;
