@@ -1,8 +1,8 @@
 import processing.net.*;
 
-static final float MAX_WIDTH = 800;
+static final float MAX_WIDTH = 1200;
 static final float MAX_HEIGHT = 800;
-static final float FRAME_RATE = 60;
+static final float FRAME_RATE = 60; // Default
 
 Bird bird;
 PipeManager pipeManager;
@@ -10,8 +10,8 @@ PipeManager pipeManager;
 boolean isGameOver;
 
 void setup() {
-	size(800, 800); // 800 x 800 Window Size
-	frameRate(FRAME_RATE); // Default
+	size(1200, 800);
+	frameRate(FRAME_RATE);
 	smooth();
 	noStroke();
 
@@ -26,6 +26,8 @@ void draw() {
 
 	pipeManager.loop();
 	bird.loop();
+
+	if (isGameOver) gameOver();
 }
 
 void keyPressed() {
@@ -39,7 +41,7 @@ void gameOver() {
 	isGameOver = true;
 	bird.disable();
 	pipeManager.disable();
-	noLoop();
+	// noLoop();
 
 	textSize(min(MAX_WIDTH, MAX_HEIGHT) / 8);
 	textAlign(CENTER, CENTER);
@@ -116,6 +118,7 @@ class PipeManager {
 	Bird bird;
 
 	float lastObstalceCreateMs;
+	float movingSpeed;
 	boolean isDisabled;
 
 	ArrayList<Pipe> pipes;
@@ -126,6 +129,7 @@ class PipeManager {
 		this.bird = bird;
 
 		lastObstalceCreateMs = 0F;
+		movingSpeed = 1;
 		isDisabled = false;
 
 		pipes = new ArrayList<Pipe>();
@@ -142,19 +146,26 @@ class PipeManager {
 				lastObstalceCreateMs = curMillis;
 				created = true;
 			}
+		}
 
-			for (int i = 0; i < pipes.size(); i++) {
-				Pipe pipe = pipes.get(i);
-				
-				if (pipe.getXWithWidth() < 0) {
-					pipes.remove(0);
-					System.out.println("Pipe Removed!!");
-				} else {
-					pipe.loop();
+		for (int i = 0; i < pipes.size(); i++) {
+			Pipe pipe = pipes.get(i);
+			
+			if (pipe.getXWithWidth() < 0) {
+				pipes.remove(0);
+				System.out.println("Pipe Removed!!");
+			} else {
+				if (!isDisabled) pipe.loop(movingSpeed);
+				else {
+					movingSpeed -= 0.01;
+					if (movingSpeed < 0) {
+						movingSpeed = 0;
+						noLoop();
+					}
+					
+					pipe.loop(movingSpeed);
 				}
 			}
-		} else {
-
 		}
 
 		return created;
@@ -176,8 +187,6 @@ class PipeManager {
 }
 
 class Pipe {
-	private static final int PIPE_MOVING_SPEED = 1;
-
 	float topY, topHeight;
 	float bottomY, bottomHeight;
 	float x, width;
@@ -186,10 +195,10 @@ class Pipe {
 		setPipe(topY, topHeight, bottomY, bottomHeight, x, width);
 	}
 
-	public void loop() {
+	public void loop(float speed) {
 		rect(x, topY, width, topHeight);
 		rect(x, bottomY, width, bottomHeight);
-		x -= PIPE_MOVING_SPEED;
+		x -= speed;
 	}
 
 	public void setPipe(float topY, float topHeight, float bottomY, float bottomHeight, 
