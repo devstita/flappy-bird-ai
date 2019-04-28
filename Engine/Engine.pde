@@ -70,8 +70,8 @@ IntList getDataForML(Bird bird, PipeManager pipeManager) {
 class Bird {
 	private static final float GRAVITY = 0.5F;
 	private static final float DYING_GRAVITY = 1.0F;
-	private static final float JUMPING_FORCE = 7.0F;
-	private static final float BIRD_SIZE = 40F;
+	private static final float JUMPING_FORCE = 7.5F;
+	private static final float BIRD_SIZE = 45F;
 
 	private float maxWidth, maxHeight;
 
@@ -148,10 +148,10 @@ class Bird {
 }
 
 class PipeManager {
-	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
+	private static final float PIPE_CREATE_TIME_MILLIS = 6000;
 	private static final float PIPE_MIN_HEIGHT = 100;
-	private static final float PIPE_WIDTH = 75;
-	private static final float PASS_AREA_HEIGHT = 150;
+	private static final float PIPE_WIDTH = 130;
+	private static final float PASS_AREA_HEIGHT = 140;
 
 	private float maxWidth, maxHeight;
 	private Bird bird;
@@ -237,6 +237,7 @@ class Pipe {
 		setPipe(topY, topHeight, bottomY, bottomHeight, x, width);
 	}
 
+	// TODO: Pipe Texture
 	public void loop(float speed) {
 		rect(x, topY, width, topHeight);
 		rect(x, bottomY, width, bottomHeight);
