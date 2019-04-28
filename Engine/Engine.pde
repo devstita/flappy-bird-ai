@@ -1,6 +1,6 @@
 import processing.net.*;
 
-static final float MAX_WIDTH = 1200;
+static final float MAX_WIDTH = 800;
 static final float MAX_HEIGHT = 800;
 static final float FRAME_RATE = 60; // Default
 
@@ -10,7 +10,7 @@ PipeManager pipeManager;
 boolean isGameOver;
 
 void setup() {
-	size(1200, 800);
+	size(800, 800);
 	frameRate(FRAME_RATE);
 	smooth();
 	noStroke();
@@ -107,7 +107,6 @@ class Bird {
 }
 
 // TODO: Develop Collision Check Algorithm
-// FIXME: Flashing pipe error
 class PipeManager {
 	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
 	private static final float PIPE_MIN_HEIGHT = 100;
@@ -152,7 +151,7 @@ class PipeManager {
 			Pipe pipe = pipes.get(i);
 			
 			if (pipe.getXWithWidth() < 0) {
-				pipes.remove(0);
+				pipes.remove(i--);
 				System.out.println("Pipe Removed!!");
 			} else {
 				if (!isDisabled) pipe.loop(movingSpeed);
