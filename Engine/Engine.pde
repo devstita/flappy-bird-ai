@@ -239,10 +239,10 @@ class Pipe {
 
 	public boolean isCollided(Bird bird) {
 		if (bird.getYUnderBird() <= 0) {
-			return (bird.getXRightBird() >= this.x && bird.getXLeftBird() <= this.x);
+			return (bird.getXRightBird() >= this.x && bird.getXLeftBird() <= getXRightPipe());
 		} else {
-			boolean topPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() <= this.topY);
-			boolean topPipeRightCollision = (bird.getXLeftBird() <= getXRightPipe() && bird.getYUnderBird() >= this.topY);
+			boolean topPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUpperBird() <= this.topHeight);
+			boolean topPipeRightCollision = (bird.getXLeftBird() <= getXRightPipe() && bird.getYUpperBird() <= this.topHeight);
 			boolean bottomPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() >= this.bottomY);
 			boolean bottomPipeRightCollision = (bird.getXLeftBird() <= getXRightPipe() && bird.getYUnderBird() >= this.bottomY);
 			
