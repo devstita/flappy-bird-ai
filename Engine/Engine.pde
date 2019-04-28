@@ -73,12 +73,16 @@ class Bird {
 
 	private float maxWidth, maxHeight;
 
+	private PImage image;
+
 	private float x, y, speed;
 	private boolean isDisabled, isJumping;
 
 	public Bird(float maxWidth, float maxHeight) {
 		this.maxWidth = maxWidth;
 		this.maxHeight = maxHeight;
+
+		image = loadImage("flappy-bird.png");
 
 		x = maxWidth / 4;
 		y = maxHeight / 2;
@@ -89,7 +93,9 @@ class Bird {
 	}
 
 	public void loop() {
-		ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
+		// ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
+		imageMode(CENTER);
+		image(image, x, y, BIRD_SIZE, BIRD_SIZE);
 
 		if (getYUnderBird() >= maxHeight) gameOver();
 
