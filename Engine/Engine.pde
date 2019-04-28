@@ -1,6 +1,6 @@
 import processing.net.*;
 
-static final float MAX_WIDTH = 800;
+static final float MAX_WIDTH = 1200;
 static final float MAX_HEIGHT = 800;
 static final float FRAME_RATE = 60; // Default
 
@@ -10,7 +10,7 @@ PipeManager pipeManager;
 boolean isGameOver;
 
 void setup() {
-	size(800, 800);
+	size(1200, 800);
 	frameRate(FRAME_RATE);
 	smooth();
 	noStroke();
@@ -30,7 +30,7 @@ void draw() {
 	if (isGameOver) gameOver();
 }
 
-void keyPressed() {
+void keyReleased() {
 	if (!isGameOver) {
 		if (key == ENTER) bird.jump();
 	}
@@ -175,8 +175,8 @@ class PipeManager {
 		float topHeight = random(PIPE_MIN_HEIGHT, maxHeight - (PIPE_MIN_HEIGHT + PASS_AREA_HEIGHT));
 		float bottomHeight = maxHeight - (topHeight + PASS_AREA_HEIGHT);
 
-		Pipe pipe = new Pipe(0, topHeight, maxWidth - bottomHeight, bottomHeight, 
-								maxWidth + PIPE_WIDTH / 2, PIPE_WIDTH);
+		Pipe pipe = new Pipe(0, topHeight, maxHeight - bottomHeight, bottomHeight, 
+								maxWidth, PIPE_WIDTH);
 		pipes.add(pipe);
 	}
 
