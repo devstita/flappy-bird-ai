@@ -58,11 +58,15 @@ void gameOver() {
 IntList getDataForML(Bird bird, PipeManager pipeManager) {
 	IntList datas = new IntList();
 	/*
-	 * datas.size() = 4
-	 * datas.get(0) = bird distance from bottom
-	 * datas.get(1) = bird distance from nearest front 
-	 * datas.get(2) = bird distance from top position of pass area
-	 * datas.get(3) = bird distance from bottom position of pass area
+	 * datas.size() = 8
+	 * datas.get(0) = bird distance from bottom (y)
+	 * datas.get(1) = bird distance from nearest front (x)
+	 * datas.get(2) = bird distance from top start position of pass area (x)
+	 * datas.get(3) = bird distance from top end position of pass area (x)
+	 * datas.get(4) = bird distance from bottom end position of pass area (x)
+	 * datas.get(5) = bird distance from bottom end position of pass area (x)
+	 * datas.get(6) = bird distance from top position of pass area (y)
+	 * datas.get(7) = bird distance from bottom position of pass area (y)
 	 */
 	 return datas;
 }
