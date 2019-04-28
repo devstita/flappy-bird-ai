@@ -1,6 +1,6 @@
 import processing.net.*;
 
-static final float MAX_WIDTH = 1200;
+static final float MAX_WIDTH = 800;
 static final float MAX_HEIGHT = 800;
 static final float FRAME_RATE = 60; // Default
 
@@ -10,7 +10,7 @@ PipeManager pipeManager;
 boolean isGameOver;
 
 void setup() {
-	size(1200, 800);
+	size(1920, 1080);
 	frameRate(FRAME_RATE);
 	smooth();
 	noStroke();
@@ -73,7 +73,7 @@ class Bird {
 	public void loop() {
 		ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
 
-		if (getYWithoutSize() >= 800) gameOver();
+		if (getYWithoutSize() >= maxHeight) gameOver();
 
 		if (!isDisabled) {
 			if (!isJumping) {
