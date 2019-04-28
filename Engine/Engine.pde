@@ -10,7 +10,7 @@ PipeManager pipeManager;
 boolean isGameOver;
 
 void setup() {
-	size(1920, 1080);
+	size(800, 800);
 	frameRate(FRAME_RATE);
 	smooth();
 	noStroke();
@@ -48,15 +48,28 @@ void gameOver() {
 	text("GAME OVER", MAX_WIDTH / 2, MAX_HEIGHT / 2);
 }
 
+// TODO: Develop get data algorithm
+IntList getDataForML(Bird bird, PipeManager pipeManager) {
+	IntList datas = new IntList();
+	/*
+	 * datas.size() = 4
+	 * datas.get(0) = bird distance from bottom
+	 * datas.get(1) = bird distance from nearest front 
+	 * datas.get(2) = bird distance from top position of pass area
+	 * datas.get(3) = bird distance from bottom position of pass area
+	 */
+	 return datas;
+}
+
 class Bird {
 	private static final float GRAVITY = 0.5F;
 	private static final float JUMPING_FORCE = 7.0F;
 	private static final float BIRD_SIZE = 40F;
 
-	float maxWidth, maxHeight;
+	private float maxWidth, maxHeight;
 
-	float x, y, speed;
-	boolean isDisabled, isJumping;
+	private float x, y, speed;
+	private boolean isDisabled, isJumping;
 
 	public Bird(float maxWidth, float maxHeight) {
 		this.maxWidth = maxWidth;
@@ -73,7 +86,7 @@ class Bird {
 	public void loop() {
 		ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
 
-		if (getYWithoutSize() >= maxHeight) gameOver();
+		if (getYUnderBird() >= maxHeight) gameOver();
 
 		if (!isDisabled) {
 			if (!isJumping) {
@@ -97,7 +110,19 @@ class Bird {
 		speed = JUMPING_FORCE;
 	}
 
-	private float getYWithoutSize() {
+	public float getXLeftBird() {
+		return (this.x - BIRD_SIZE / 2);
+	}
+
+	public float getXRightBird() {
+		return (this.x + BIRD_SIZE / 2);
+	}
+
+	public float getYUpperBird() {
+		return (this.y - BIRD_SIZE / 2);
+	}
+
+	public float getYUnderBird() {
 		return (this.y + BIRD_SIZE / 2);
 	}
 
@@ -106,21 +131,20 @@ class Bird {
 	}
 }
 
-// TODO: Develop Collision Check Algorithm
 class PipeManager {
 	private static final float PIPE_CREATE_TIME_MILLIS = 4500;
 	private static final float PIPE_MIN_HEIGHT = 100;
 	private static final float PIPE_WIDTH = 75;
 	private static final float PASS_AREA_HEIGHT = 150;
 
-	float maxWidth, maxHeight;
-	Bird bird;
+	private float maxWidth, maxHeight;
+	private Bird bird;
 
-	float lastObstalceCreateMs;
-	float movingSpeed;
-	boolean isDisabled;
+	private float lastObstalceCreateMs;
+	private float movingSpeed;
+	private boolean isDisabled;
 
-	ArrayList<Pipe> pipes;
+	private ArrayList<Pipe> pipes;
 
 	public PipeManager(float maxWidth, float maxHeight, Bird bird) {
 		this.maxWidth = maxWidth;
@@ -150,10 +174,15 @@ class PipeManager {
 		for (int i = 0; i < pipes.size(); i++) {
 			Pipe pipe = pipes.get(i);
 			
-			if (pipe.getXWithWidth() < 0) {
+			if (pipe.getXRightPipe() < 0) {
 				pipes.remove(i--);
 				System.out.println("Pipe Removed!!");
 			} else {
+				if (!isDisabled) if (pipe.isCollided(bird)) {
+					gameOver();
+					break;
+				}
+
 				if (!isDisabled) pipe.loop(movingSpeed);
 				else {
 					movingSpeed -= 0.01;
@@ -186,9 +215,9 @@ class PipeManager {
 }
 
 class Pipe {
-	float topY, topHeight;
-	float bottomY, bottomHeight;
-	float x, width;
+	private float topY, topHeight;
+	private float bottomY, bottomHeight;
+	private float x, width;
 
 	public Pipe(float topY, float topHeight, float bottomY, float bottomHeight, float x, float width) {
 		setPipe(topY, topHeight, bottomY, bottomHeight, x, width);
@@ -198,6 +227,16 @@ class Pipe {
 		rect(x, topY, width, topHeight);
 		rect(x, bottomY, width, bottomHeight);
 		x -= speed;
+	}
+
+	public boolean isCollided(Bird bird) {
+		boolean topPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() <= this.topY);
+		boolean topPipeRightCollision = (bird.getXLeftBird() <= this.x && bird.getYUnderBird() >= this.topY);
+		boolean bottomPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() >= this.bottomY);
+		boolean bottomPipeRightCollision = (bird.getXLeftBird() <= this.x && bird.getYUnderBird() >= this.bottomY);
+		
+		return ((topPipeLeftCollision && topPipeRightCollision)
+			 || (bottomPipeLeftCollision && bottomPipeRightCollision));
 	}
 
 	public void setPipe(float topY, float topHeight, float bottomY, float bottomHeight, 
@@ -220,7 +259,7 @@ class Pipe {
 		return this.width;
 	}
 
-	public float getXWithWidth() {
+	public float getXRightPipe() {
 		return (getX() + getWidth());
 	}
 }
