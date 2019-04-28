@@ -10,6 +10,7 @@ PipeManager pipeManager;
 boolean keyInputed;
 boolean isGameOver;
 
+// TODO: show point (ML agent fitness)
 void setup() {
 	size(800, 800);
 	frameRate(FRAME_RATE);
@@ -68,6 +69,7 @@ IntList getDataForML(Bird bird, PipeManager pipeManager) {
 
 class Bird {
 	private static final float GRAVITY = 0.5F;
+	private static final float DYING_GRAVITY = 1.0F;
 	private static final float JUMPING_FORCE = 7.0F;
 	private static final float BIRD_SIZE = 40F;
 
@@ -94,6 +96,7 @@ class Bird {
 
 	public void loop() {
 		// ellipse(x, y, BIRD_SIZE, BIRD_SIZE);
+
 		imageMode(CENTER);
 		image(image, x, y, BIRD_SIZE, BIRD_SIZE);
 
@@ -112,6 +115,9 @@ class Bird {
 				y -= speed;
 				speed -= GRAVITY;
 			}
+		} else {
+			speed += DYING_GRAVITY;
+			y += speed;
 		}
 	}
 
