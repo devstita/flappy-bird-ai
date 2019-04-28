@@ -7,6 +7,7 @@ static final float FRAME_RATE = 60; // Default
 Bird bird;
 PipeManager pipeManager;
 
+boolean keyInputed;
 boolean isGameOver;
 
 void setup() {
@@ -18,6 +19,7 @@ void setup() {
 	bird = new Bird(MAX_WIDTH, MAX_HEIGHT);
 	pipeManager = new PipeManager(MAX_WIDTH, MAX_HEIGHT, bird);
 
+	keyInputed = false;
 	isGameOver = false;
 }
 
@@ -30,22 +32,25 @@ void draw() {
 	if (isGameOver) gameOver();
 }
 
+void keyPressed() {
+	if (!keyInputed && !isGameOver && key == ENTER) bird.jump();
+	keyInputed = true;
+}
+
 void keyReleased() {
-	if (!isGameOver) {
-		if (key == ENTER) bird.jump();
-	}
+	keyInputed = false;
 }
 
 void gameOver() {
-	System.out.println("Game Over");
 	isGameOver = true;
 	bird.disable();
 	pipeManager.disable();
-	// noLoop();
 
+	fill(0, 0, 0);
 	textSize(min(MAX_WIDTH, MAX_HEIGHT) / 8);
 	textAlign(CENTER, CENTER);
 	text("GAME OVER", MAX_WIDTH / 2, MAX_HEIGHT / 2);
+	fill(255, 255, 255);
 }
 
 // TODO: Develop get data algorithm
@@ -105,7 +110,6 @@ class Bird {
 	}
 
 	public void jump() {
-		System.out.println("Jump Bird!!");
 		isJumping = true;
 		speed = JUMPING_FORCE;
 	}
@@ -176,7 +180,6 @@ class PipeManager {
 			
 			if (pipe.getXRightPipe() < 0) {
 				pipes.remove(i--);
-				System.out.println("Pipe Removed!!");
 			} else {
 				if (!isDisabled) if (pipe.isCollided(bird)) {
 					gameOver();
@@ -200,7 +203,6 @@ class PipeManager {
 	}
 
 	private void createPipe() {
-		System.out.println("Create Pipe!!");
 		float topHeight = random(PIPE_MIN_HEIGHT, maxHeight - (PIPE_MIN_HEIGHT + PASS_AREA_HEIGHT));
 		float bottomHeight = maxHeight - (topHeight + PASS_AREA_HEIGHT);
 
@@ -230,13 +232,17 @@ class Pipe {
 	}
 
 	public boolean isCollided(Bird bird) {
-		boolean topPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() <= this.topY);
-		boolean topPipeRightCollision = (bird.getXLeftBird() <= this.x && bird.getYUnderBird() >= this.topY);
-		boolean bottomPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() >= this.bottomY);
-		boolean bottomPipeRightCollision = (bird.getXLeftBird() <= this.x && bird.getYUnderBird() >= this.bottomY);
-		
-		return ((topPipeLeftCollision && topPipeRightCollision)
-			 || (bottomPipeLeftCollision && bottomPipeRightCollision));
+		if (bird.getYUnderBird() <= 0) {
+			return (bird.getXRightBird() >= this.x && bird.getXLeftBird() <= this.x);
+		} else {
+			boolean topPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() <= this.topY);
+			boolean topPipeRightCollision = (bird.getXLeftBird() <= getXRightPipe() && bird.getYUnderBird() >= this.topY);
+			boolean bottomPipeLeftCollision = (bird.getXRightBird() >= this.x && bird.getYUnderBird() >= this.bottomY);
+			boolean bottomPipeRightCollision = (bird.getXLeftBird() <= getXRightPipe() && bird.getYUnderBird() >= this.bottomY);
+			
+			return ((topPipeLeftCollision && topPipeRightCollision)
+				|| (bottomPipeLeftCollision && bottomPipeRightCollision));
+		}
 	}
 
 	public void setPipe(float topY, float topHeight, float bottomY, float bottomHeight, 
