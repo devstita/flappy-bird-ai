@@ -38,7 +38,8 @@ void draw() {
 }
 
 void keyPressed() {
-	if (!keyInputed && !isGameOver && key == ENTER) bird.jump();
+	if (!keyInputed && !isGameOver)
+		if (key == ' ' || key == ENTER || (key == CODED && keyCode == UP)) bird.jump();
 	keyInputed = true;
 }
 
