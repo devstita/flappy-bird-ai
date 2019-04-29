@@ -48,13 +48,14 @@ class PipeManager {
 				frontPipes.remove(i--);
 				if (!isDisabled) pipePassed();
 			} else {
-				if (!isDisabled) if (pipe.isCollided(bird)) {
-					gameOver();
-					break;
-				}
-
-				if (!isDisabled) pipe.loop(movingSpeed);
-				else {
+				if (!isDisabled) {
+					pipe.loop(movingSpeed);
+					
+					if (pipe.isCollided(bird)) {
+						gameOver();
+						break;
+					}
+				} else {
 					movingSpeed -= 0.01;
 					if (movingSpeed < 0) {
 						movingSpeed = 0;
