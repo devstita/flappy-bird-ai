@@ -48,6 +48,10 @@ class Pipe {
 		return this.width;
 	}
 
+	public float getXLeftPipe() {
+		return getX();
+	}
+
 	public float getXRightPipe() {
 		return (getX() + getWidth());
 	}

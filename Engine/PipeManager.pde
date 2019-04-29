@@ -11,7 +11,8 @@ class PipeManager {
 	private float movingSpeed;
 	private boolean isDisabled;
 
-	private ArrayList<Pipe> pipes;
+	private ArrayList<Pipe> frontPipes;
+	private ArrayList<Pipe> backPipes;
 
 	public PipeManager(float maxWidth, float maxHeight, Bird bird) {
 		this.maxWidth = maxWidth;
@@ -22,7 +23,9 @@ class PipeManager {
 		movingSpeed = 1;
 		isDisabled = false;
 
-		pipes = new ArrayList<Pipe>();
+		frontPipes = new ArrayList<Pipe>();
+		backPipes = new ArrayList<Pipe>();
+		
 		createPipe();
 	}
 
@@ -38,11 +41,12 @@ class PipeManager {
 			}
 		}
 
-		for (int i = 0; i < pipes.size(); i++) {
-			Pipe pipe = pipes.get(i);
-			
-			if (pipe.getXRightPipe() < 0) {
-				pipes.remove(i--);
+		for (int i = 0; i < frontPipes.size(); i++) {
+			Pipe pipe = frontPipes.get(i);
+			if (pipe.getXRightPipe() < bird.getXLeftBird()) {
+				backPipes.add(pipe);
+				frontPipes.remove(i--);
+				if (!isDisabled) pipePassed();
 			} else {
 				if (!isDisabled) if (pipe.isCollided(bird)) {
 					gameOver();
@@ -62,6 +66,16 @@ class PipeManager {
 			}
 		}
 
+		for (int i = 0; i < backPipes.size(); i++) {
+			Pipe pipe = backPipes.get(i);
+			
+			if (pipe.getXRightPipe() < 0) {
+				backPipes.remove(i--);
+			} else {
+				pipe.loop(movingSpeed);
+			}
+		}
+
 		return created;
 	}
 
@@ -71,7 +85,7 @@ class PipeManager {
 
 		Pipe pipe = new Pipe(0, topHeight, maxHeight - bottomHeight, bottomHeight, 
 								maxWidth, PIPE_WIDTH);
-		pipes.add(pipe);
+		frontPipes.add(pipe);
 	}
 
 	public void disable() {

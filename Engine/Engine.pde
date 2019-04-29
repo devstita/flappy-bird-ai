@@ -7,12 +7,11 @@ static final float FRAME_RATE = 60; // Default
 Bird bird;
 PipeManager pipeManager;
 
-int previousPoint;
+int point;
 
 boolean keyInputed;
 boolean isGameOver;
 
-// TODO: show point (ML agent fitness)
 void setup() {
 	size(800, 800);
 	frameRate(FRAME_RATE);
@@ -22,7 +21,7 @@ void setup() {
 	bird = new Bird(MAX_WIDTH, MAX_HEIGHT);
 	pipeManager = new PipeManager(MAX_WIDTH, MAX_HEIGHT, bird);
 
-	previousPoint = 0;
+	point = 0;
 
 	keyInputed = false;
 	isGameOver = false;
@@ -48,17 +47,15 @@ void keyReleased() {
 }
 
 void showPoint() {
-	int point;
-	if (isGameOver) point = previousPoint;
-	else point = 0;
-
 	fill(0, 0, 0);
-	textSize(min(MAX_WIDTH, MAX_HEIGHT) / 32);
+	textSize(min(MAX_WIDTH, MAX_HEIGHT) / 24);
 	textAlign(CENTER, CENTER);
-	text(str(int(point)), MAX_WIDTH / 2, MAX_HEIGHT / 4);
+	text(str(int(point)), MAX_WIDTH / 2, MAX_HEIGHT / 8);
 	fill(255, 255, 255);
+}
 
-	previousPoint = point;
+void pipePassed() {
+	point++;
 }
 
 void gameOver() {
@@ -86,6 +83,7 @@ IntList getDataForML(Bird bird, PipeManager pipeManager) {
 	 * datas.get(5) = bird distance from bottom end position of pass area (x)
 	 * datas.get(6) = bird distance from top position of pass area (y)
 	 * datas.get(7) = bird distance from bottom position of pass area (y)
+	 * datas.get(8) = point
 	 */
 	 return datas;
 }
