@@ -57,12 +57,20 @@ class Bird {
 		speed = JUMPING_FORCE;
 	}
 
+	public float getXCenterBird() {
+		return this.x;
+	}
+
 	public float getXLeftBird() {
 		return (this.x - BIRD_SIZE / 2);
 	}
 
 	public float getXRightBird() {
 		return (this.x + BIRD_SIZE / 2);
+	}
+
+	public float getYCenterBird() {
+		return this.y;
 	}
 
 	public float getYUpperBird() {

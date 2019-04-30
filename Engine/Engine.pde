@@ -72,8 +72,12 @@ void gameOver() {
 }
 
 // TODO: Develop get data algorithm
+
+	// TODO: Re-Check Data
+// ML - Fitness: Time millis after running game
 IntList getDataForML(Bird bird, PipeManager pipeManager) {
 	IntList datas = new IntList();
+	
 	/*
 	 * datas.size() = 8
 	 * datas.get(0) = bird distance from bottom (y)
@@ -84,7 +88,9 @@ IntList getDataForML(Bird bird, PipeManager pipeManager) {
 	 * datas.get(5) = bird distance from bottom end position of pass area (x)
 	 * datas.get(6) = bird distance from top position of pass area (y)
 	 * datas.get(7) = bird distance from bottom position of pass area (y)
-	 * datas.get(8) = point
 	 */
+
+	Pipe nearestPipe = pipeManager.getNearestFrontPipe();
+
 	 return datas;
 }

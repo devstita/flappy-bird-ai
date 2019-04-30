@@ -89,6 +89,11 @@ class PipeManager {
 		frontPipes.add(pipe);
 	}
 
+	public Pipe getNearestFrontPipe() {
+		if (frontPipes.isEmpty()) return null;
+		else return frontPipes.get(0);
+	}
+
 	public void disable() {
 		isDisabled = true;
 	}
