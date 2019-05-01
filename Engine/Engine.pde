@@ -4,6 +4,9 @@ static final float MAX_WIDTH = 800;
 static final float MAX_HEIGHT = 800;
 static final float FRAME_RATE = 60; // Default
 
+static final String SERVER_IP = "127.0.0.1";
+static final int PORT = 9857;
+
 Bird bird;
 PipeManager pipeManager;
 
@@ -11,6 +14,8 @@ int point;
 
 boolean keyInputed;
 boolean isGameOver;
+
+SerialConnection sc;
 
 void setup() {
 	size(800, 800);
@@ -25,6 +30,8 @@ void setup() {
 
 	keyInputed = false;
 	isGameOver = false;
+
+	sc = new SerialConnection(SERVER_IP, PORT);
 }
 
 void draw() {
