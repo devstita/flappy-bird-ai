@@ -55,4 +55,20 @@ class Pipe {
 	public float getXRightPipe() {
 		return (getX() + getWidth());
 	}
+
+	public float getTopYUpperPipe() {
+		return (this.topY);
+	}
+
+	public float getTopYUnderPipe() {
+		return (this.topY + this.topHeight);
+	}
+
+	public float getBottomYUpperPipe() {
+		return (this.bottomY);
+	}
+
+	public float getBottomYUnderPipe() {
+		return (this.bottomY + this.topHeight);
+	}
 }

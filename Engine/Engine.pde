@@ -33,6 +33,7 @@ void draw() {
 	pipeManager.loop();
 	bird.loop();
 	showPoint();
+	getDataForML(bird, pipeManager);
 
 	if (isGameOver) gameOver();
 }
@@ -71,26 +72,33 @@ void gameOver() {
 	fill(255, 255, 255);
 }
 
-// TODO: Develop get data algorithm
+FloatList getDataForML(Bird bird, PipeManager pipeManager) {
+	FloatList datas = new FloatList();
 
-	// TODO: Re-Check Data
-// ML - Fitness: Time millis after running game
-IntList getDataForML(Bird bird, PipeManager pipeManager) {
-	IntList datas = new IntList();
-	
 	/*
-	 * datas.size() = 8
-	 * datas.get(0) = bird distance from bottom (y)
-	 * datas.get(1) = bird distance from nearest front (x)
-	 * datas.get(2) = bird distance from top start position of pass area (x)
-	 * datas.get(3) = bird distance from top end position of pass area (x)
-	 * datas.get(4) = bird distance from bottom end position of pass area (x)
-	 * datas.get(5) = bird distance from bottom end position of pass area (x)
-	 * datas.get(6) = bird distance from top position of pass area (y)
-	 * datas.get(7) = bird distance from bottom position of pass area (y)
+	 * datas.size() = 7
+	 * datas.get(0) = point // This data will be used when the genetic algorithm run
+	 * datas.get(1) = daed (0) or alive (1)
+	 * datas.get(2) = bird distance from bottom (y)
+	 * 
+	 * datas.get(3) = bird distance from nearest front pipe start (x) -> (-1) = passed
+	 * datas.get(4) = bird distance from nearest front pipe end (x) -> (-1) = passed
+	 * datas.get(5) = bird distance from top position of pass area (y)
+	 * datas.get(6) = bird distance from bottom position of pass area (y)
 	 */
 
 	Pipe nearestPipe = pipeManager.getNearestFrontPipe();
 
-	 return datas;
+	datas.append(point); // 0
+	datas.append(int(!isGameOver)); // 1
+	datas.append((MAX_HEIGHT - bird.getYUnderBird() < 0) ? 0 : MAX_HEIGHT - bird.getYUnderBird()); // 2
+	datas.append((nearestPipe.getXLeftPipe() - bird.getXRightBird() < 0) ? -1 : nearestPipe.getXLeftPipe() - bird.getXRightBird()); // 3
+	datas.append((nearestPipe.getXRightPipe() - bird.getXLeftBird() < 0) ? -1 : nearestPipe.getXRightPipe() - bird.getXLeftBird()); // 4
+	datas.append(bird.getYUpperBird() - nearestPipe.getTopYUnderPipe()); // 5
+	datas.append(nearestPipe.getBottomYUpperPipe() - bird.getYUnderBird()); // 6
+	
+	for (int i = 0; i < datas.size(); i++) print(datas.get(i) + ", ");
+	println();
+
+	return datas;
 }
