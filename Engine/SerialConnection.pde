@@ -38,12 +38,12 @@ class SerialConnection {
     }
     
     public int loop() {
-        int action = -1;
-        if (client.active() && client.available() > 0) action = int(client.readString());
-        return action;
+        byte[] buffer = new byte[1]; // NOTE: Range of the value (Integer): 0 ~ 1 (1Bit)
+        if (client.active() && client.available() > 0) client.readBytes(buffer);
+        return int(buffer[0]);
     }
 
     public void disconnect() {
         send("disc");
-    }
+    }   
 }

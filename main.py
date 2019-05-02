@@ -1,6 +1,13 @@
-import serial_connection
+from serial_connection import ConnectionManager
 
 PORT = 9857
 
-cm = serial_connection.ConnectionManager(PORT)
+conn, addr = ConnectionManager.connect(PORT)
 
+data = ConnectionManager.read(conn)
+while not (data is "disc" or not data):
+    inputs = data.split(',')
+    # print(inputs)
+    ConnectionManager.send(conn, 1)
+
+    data = ConnectionManager.read(conn)

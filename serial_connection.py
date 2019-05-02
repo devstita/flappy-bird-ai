@@ -1,23 +1,33 @@
 import socket
 
 
-# TODO: Develop Python - Java Connection
 class ConnectionManager:
-    def __init__(self, port=9999):
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connect()
+    def __init__(self):
+        pass
 
-    def connect(self):
-        self.sock.bind(("127.0.0.1", self.port))
-        self.sock.listen(self.port)
-        conn, addr = self.sock.accept()
+    @staticmethod
+    def connect(port=9999):
+        port = port
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        data = conn.recv(1024).decode(encoding="UTF-8")
-        while not (data is "disc" or data is ''):
-            inputs = data.split(',')
-            print(inputs)
+        sock.bind(("127.0.0.1", port))
+        sock.listen(port)
 
-            data = conn.recv(1024).decode(encoding="UTF-8")
+        conn, addr = sock.accept()
+        return conn, addr
 
-        print('Disconnected')
+    @staticmethod
+    def read(conn):
+        return conn.recv(1024).decode(encoding="UTF-8")
+
+    @staticmethod
+    def send(conn, value):
+        data = bytes([value])
+        # data = str(value).encode()
+        print("Send:", data)
+        conn.sendall(data)
+
+    @staticmethod
+    def is_disconnected(conn):
+        return conn.fileno() == -1
+

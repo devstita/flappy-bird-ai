@@ -40,9 +40,14 @@ void draw() {
 	pipeManager.loop();
 	bird.loop();
 	showPoint();
-	sc.sendData(getDataForML(bird, pipeManager));
 
-	if (isGameOver) gameOver();
+	if (isGameOver) {
+		gameOver();
+		return;
+	}
+
+	sc.sendData(getDataForML(bird, pipeManager));
+	act(sc.loop());
 }
 
 void keyPressed() {
@@ -55,6 +60,7 @@ void keyReleased() {
 	keyInputed = false;
 }
 
+// FIXME: Solve Making Exception when socket is disactived algorithm
 void stop() {
 	log("Stoped");
 	sc.disconnect();
@@ -84,6 +90,19 @@ void gameOver() {
 	fill(255, 255, 255);
 }
 
+void act(int action) {
+	log(action);
+	switch (action) {
+		default:
+		case 0: 
+			// Do Nothing
+			break;
+		case 1: 
+			bird.jump();
+			break;
+	}
+}
+
 FloatList getDataForML(Bird bird, PipeManager pipeManager) {
 	FloatList datas = new FloatList();
 
@@ -109,8 +128,8 @@ FloatList getDataForML(Bird bird, PipeManager pipeManager) {
 	datas.append(bird.getYUpperBird() - nearestPipe.getTopYUnderPipe()); // 5
 	datas.append(nearestPipe.getBottomYUpperPipe() - bird.getYUnderBird()); // 6
 	
-	for (int i = 0; i < datas.size(); i++) print(datas.get(i) + ", ");
-	newLine();
+	// for (int i = 0; i < datas.size(); i++) print(datas.get(i) + ", ");
+	// newLine();
 
 	return datas;
 }
