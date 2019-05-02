@@ -40,7 +40,7 @@ void draw() {
 	pipeManager.loop();
 	bird.loop();
 	showPoint();
-	getDataForML(bird, pipeManager);
+	sc.send(getDataForML(bird, pipeManager));
 
 	if (isGameOver) gameOver();
 }
@@ -96,8 +96,8 @@ FloatList getDataForML(Bird bird, PipeManager pipeManager) {
 
 	Pipe nearestPipe = pipeManager.getNearestFrontPipe();
 
-	datas.append(point); // 0
-	datas.append(int(!isGameOver)); // 1
+	datas.append(float(point)); // 0
+	datas.append(float(int(!isGameOver))); // 1
 	datas.append((MAX_HEIGHT - bird.getYUnderBird() < 0) ? 0 : MAX_HEIGHT - bird.getYUnderBird()); // 2
 	datas.append((nearestPipe.getXLeftPipe() - bird.getXRightBird() < 0) ? -1 : nearestPipe.getXLeftPipe() - bird.getXRightBird()); // 3
 	datas.append((nearestPipe.getXRightPipe() - bird.getXLeftBird() < 0) ? -1 : nearestPipe.getXRightPipe() - bird.getXLeftBird()); // 4
@@ -105,7 +105,20 @@ FloatList getDataForML(Bird bird, PipeManager pipeManager) {
 	datas.append(nearestPipe.getBottomYUpperPipe() - bird.getYUnderBird()); // 6
 	
 	for (int i = 0; i < datas.size(); i++) print(datas.get(i) + ", ");
-	println();
+	newLine();
 
 	return datas;
+}
+
+void log(String str) {
+	println(str);
+}
+
+void error(String str) {
+	println("[ ERROR ] " + str);
+	exit();
+}
+
+void newLine() {
+	println();
 }
