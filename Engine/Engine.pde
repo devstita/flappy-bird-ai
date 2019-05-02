@@ -40,7 +40,7 @@ void draw() {
 	pipeManager.loop();
 	bird.loop();
 	showPoint();
-	sc.send(getDataForML(bird, pipeManager));
+	sc.sendData(getDataForML(bird, pipeManager));
 
 	if (isGameOver) gameOver();
 }
@@ -53,6 +53,11 @@ void keyPressed() {
 
 void keyReleased() {
 	keyInputed = false;
+}
+
+void stop() {
+	log("Stoped");
+	sc.disconnect();
 }
 
 void showPoint() {
@@ -117,6 +122,7 @@ void log(String str) {
 void error(String str) {
 	println("[ ERROR ] " + str);
 	exit();
+	stop();
 }
 
 void newLine() {

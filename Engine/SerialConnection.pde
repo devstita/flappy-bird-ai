@@ -17,7 +17,7 @@ class SerialConnection {
         this.client = new Client(Engine.this, server, port);
     }
 
-    public void send(FloatList list) {
+    public void sendData(FloatList list) {
         String msg = "";
 
         if (list.size() > 0) {
@@ -27,15 +27,23 @@ class SerialConnection {
             error("ML Data is Empty");
         }
 
+        send(msg);
+    }
+
+    public void send(String msg) {
         if (!client.active()) error("Socket is disactivated");
         else {
             client.write(msg);
         }
     }
-
+    
     public int loop() {
         int action = -1;
         if (client.active() && client.available() > 0) action = int(client.readString());
         return action;
+    }
+
+    public void disconnect() {
+        send("disc");
     }
 }
