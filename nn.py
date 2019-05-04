@@ -1,3 +1,3 @@
-# TODO: Develop Neural Network (Reinforcement Learning - ML)
+# TODO: Develop Neural Network (DQN, Genetic Algorithm)
 class NeuralNetwork:
     pass

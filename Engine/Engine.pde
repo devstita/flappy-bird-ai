@@ -7,6 +7,7 @@ static final float FRAME_RATE = 60; // Default
 static final String SERVER_IP = "127.0.0.1";
 static final int PORT = 9857;
 
+// TODO: Clone bird for Genetic Algorithm
 Bird bird;
 PipeManager pipeManager;
 
@@ -120,6 +121,7 @@ FloatList getDataForML(Bird bird, PipeManager pipeManager) {
 
 	Pipe nearestPipe = pipeManager.getNearestFrontPipe();
 
+	// TODO: Check what to use for reward (variable)
 	datas.append(float(point)); // 0
 	datas.append(float(int(!isGameOver))); // 1
 	datas.append((MAX_HEIGHT - bird.getYUnderBird() < 0) ? 0 : MAX_HEIGHT - bird.getYUnderBird()); // 2
